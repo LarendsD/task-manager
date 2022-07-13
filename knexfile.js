@@ -29,9 +29,9 @@ export const test = {
 export const production = {
   client: 'pg',
   connection: {
-    host: 'https://manager-app4.herokuapp.com/',
+    connectionString: process.env.DATABASE_URL,
     user: 'postgres',
-    ssl: { rejectUnauthorized: false },
+    ssl: false,
     filename: './database.bki',
   },
   useNullAsDefault: true,
