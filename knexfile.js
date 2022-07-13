@@ -29,6 +29,8 @@ export const test = {
 export const production = {
   client: 'pg',
   connection: {
+    connectinString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
     filename: './database.bki',
   },
   useNullAsDefault: true,
