@@ -31,7 +31,7 @@ export const production = {
   connection: {
     connectionString: process.env.DATABASE_URL,
     user: 'postgres',
-    ssl: false,
+    ssl: { rejectUnauthorized: false },
     filename: './database.bki',
   },
   useNullAsDefault: true,
