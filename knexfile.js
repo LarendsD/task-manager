@@ -29,7 +29,7 @@ export const test = {
 export const production = {
   client: 'postgresql',
   connection: {
-    filename: './database.sqlite',
+    filename: './database.bki',
   },
   useNullAsDefault: true,
   migrations,
