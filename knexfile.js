@@ -27,7 +27,7 @@ export const test = {
 };
 
 export const production = {
-  client: 'postgresql',
+  client: 'pg',
   connection: {
     filename: './database.bki',
   },
