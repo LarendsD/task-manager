@@ -27,7 +27,7 @@ export const test = {
 };
 
 export const production = {
-  client: 'sqlite3',
+  client: 'postgresql',
   connection: {
     filename: './database.sqlite',
   },
