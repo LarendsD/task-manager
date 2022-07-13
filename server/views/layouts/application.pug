@@ -50,10 +50,16 @@ main
           //input.form-control.form-control-dark(type='search' placeholder='Search...' aria-label='Search')
         .text-end
         if isAuthenticated()
-          +buttonTo(route('session'), 'delete')(class="btn nav-link" value=t('layouts.application.signOut'))
+          +buttonTo(route('session'), 'delete')(class="btn btn-outline-danger me-2" value=t('layouts.application.signOut'))
         else
-          button.btn.btn-outline-light.me-2(type='button')= t('layouts.application.signIn')
-          button.btn.btn-warning(type='button')= t('layouts.application.signUp')
+          //button.btn.btn-outline-light.me-2(type='button')
+          a.btn.btn-outline-light.me-2(href=route('newSession') role='button')= t('layouts.application.signIn')
+          //button.btn.btn-warning(type='button')
+          a.btn.btn.btn-warning(href=route('newUser') role='button')= t('layouts.application.signUp')
+
+      each messages, type in reply.flash() || []
+        each message in messages
+          div.alert(class=`alert-${getAlertClass(type)}`)= message
 
       h1.my-4
         block header
