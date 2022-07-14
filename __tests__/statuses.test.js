@@ -1,13 +1,11 @@
 // @ts-check
 
-import _ from 'lodash';
 import fastify from 'fastify';
 
 import init from '../server/plugin.js';
-import encrypt from '../server/lib/secure.cjs';
 import { getTestData, prepareData } from './helpers/index.js';
 
-describe('test users CRUD', () => {
+describe('test statuses CRUD', () => {
   let app;
   let knex;
   let models;
@@ -31,11 +29,6 @@ describe('test users CRUD', () => {
     await init(app);
     knex = app.objection.knex;
     models = app.objection.models;
-
-    // TODO: пока один раз перед тестами
-    // тесты не должны зависеть друг от друга
-    // перед каждым тестом выполняем миграции
-    // и заполняем БД тестовыми данными
   });
 
   beforeEach(async () => {
@@ -44,104 +37,101 @@ describe('test users CRUD', () => {
   });
 
   it('index', async () => {
+    const responseNoAuth = await app.inject({
+      method: 'GET',
+      url: app.reverse('statuses'),
+    });
+    expect(responseNoAuth.statusCode).toBe(302);
+    const cookie = await logIn(testData.users.existing);
     const response = await app.inject({
       method: 'GET',
-      url: app.reverse('users'),
+      url: app.reverse('statuses'),
+      cookies: cookie,
     });
     expect(response.statusCode).toBe(200);
   });
 
   it('new', async () => {
+    const responseNoAuth = await app.inject({
+      method: 'GET',
+      url: app.reverse('newStatus'),
+    });
+    expect(responseNoAuth.statusCode).toBe(302);
+    const cookie = await logIn(testData.users.existing);
     const response = await app.inject({
       method: 'GET',
-      url: app.reverse('newUser'),
+      url: app.reverse('newStatus'),
+      cookies: cookie,
     });
     expect(response.statusCode).toBe(200);
   });
 
   it('create', async () => {
-    const params = testData.users.new;
+    const params = testData.statuses.new;
     const response = await app.inject({
       method: 'POST',
-      url: app.reverse('users'),
+      url: app.reverse('statuses'),
       payload: {
         data: params,
       },
     });
-
     expect(response.statusCode).toBe(302);
-    const expected = {
-      ..._.omit(params, 'password'),
-      passwordDigest: encrypt(params.password),
-    };
-    const user = await models.user.query().findOne({ email: params.email });
-    expect(user).toMatchObject(expected);
+    const expected = params;
+    const status = await models.taskStatus.query().findOne({ name: params.name });
+    expect(status).toMatchObject(expected);
   });
 
   it('read', async () => {
     const noAuth = await app.inject({
       method: 'GET',
-      url: '/users/2/edit',
+      url: '/statuses/2/edit',
     });
     expect(noAuth.statusCode).toBe(302);
     const cookie = await logIn(testData.users.existing);
-    const withAuth = await app.inject({
+    const response = await app.inject({
       method: 'GET',
-      url: '/users/10/edit',
+      url: '/statuses/2/edit',
       cookies: cookie,
     });
-    expect(withAuth.statusCode).toBe(302);
-    const trueUser = await app.inject({
-      method: 'GET',
-      url: '/users/2/edit',
-      cookies: cookie,
-    });
-    expect(trueUser.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200);
   });
 
   it('update', async () => {
     const cookie = await logIn(testData.users.existing);
-    const { email } = testData.users;
-    testData.users.existing.email = 'newEmail@mail.ru';
+    const { name } = testData.statuses.existing;
+    testData.statuses.existing.name = 'Завершен';
     const response = await app.inject({
       method: 'POST',
-      url: '/users/2',
+      url: '/statuses/2',
       cookies: cookie,
       payload: {
-        data: testData.users.existing,
+        data: testData.statuses.existing,
       },
     });
     expect(response.statusCode).toBe(302);
-    const updatedUser = await models.user.query().findById(2);
-    expect(updatedUser.email).not.toBe(email);
+    const updatedStatus = await models.taskStatus.query().findById(2);
+    expect(updatedStatus.name).not.toBe(name);
   });
 
   it('delete', async () => {
     const responseNoAuth = await app.inject({
       method: 'DELETE',
-      url: 'users/2',
+      url: 'statuses/2',
     });
-    const user = await models.user.query().findById(2);
     expect(responseNoAuth.statusCode).toBe(302);
-    expect(user).not.toBeUndefined();
     const cookie = await logIn(testData.users.existing);
     const response = await app.inject({
       method: 'DELETE',
-      url: 'users/2',
+      url: 'statuses/2',
       cookies: cookie,
     });
-    const deletedUser = await models.user.query().findById(2);
+    const deletedStatus = await models.taskStatus.query().findById(2);
     expect(response.statusCode).toBe(302);
-    expect(deletedUser).toBeUndefined();
-  });
-
-  afterEach(async () => {
-    // Пока Segmentation fault: 11
-    // после каждого теста откатываем миграции
-    // await knex.migrate.rollback();
+    expect(deletedStatus).toBeUndefined();
   });
 
   afterAll(async () => {
+    // await knex.migrate.rollback();
     await app.close();
   });
 });

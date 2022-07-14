@@ -12,5 +12,13 @@
       "email": "lawrence.kulas87@outlook.com",
       "password": "O6AvLIQL1cbzrre"
     }
+  },
+  "statuses": {
+    "new": {
+      "name": "Новый"
+    },
+    "existing": {
+      "name": "В работе"
+    }
   }
 }

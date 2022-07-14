@@ -50,6 +50,7 @@ main
           //input.form-control.form-control-dark(type='search' placeholder='Search...' aria-label='Search')
         .text-end
         if isAuthenticated()
+          a.nav-link.px-2.text-white(href=route('statuses') role='button')= t('layouts.application.statuses')
           +buttonTo(route('session'), 'delete')(class="btn btn-outline-danger me-2" value=t('layouts.application.signOut'))
         else
           //button.btn.btn-outline-light.me-2(type='button')

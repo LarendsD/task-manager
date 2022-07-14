@@ -26,6 +26,19 @@ export default {
           success: 'Пользователь успешно удален',
         },
       },
+      statuses: {
+        update: {
+          error: 'Не удалось изменить статус',
+          success: 'Статус успешно изменён',
+        },
+        create: {
+          error: 'Не удалось создать статус',
+          success: 'Статус успешно создан',
+        },
+        delete: {
+          success: 'Статус успешно удалён',
+        },
+      },
       accessError: 'Вы не можете редактировать или удалять другого пользователя',
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
     },
@@ -36,6 +49,9 @@ export default {
         signUp: 'Регистрация',
         signOut: 'Выход',
         edit: 'Изменение пользователя',
+        statuses: 'Статусы',
+        createStatus: 'Создание статуса',
+        updateStatus: 'Изменение статуса',
       },
     },
     views: {
@@ -59,6 +75,14 @@ export default {
           submit: 'Сохранить',
           signUp: 'Регистрация',
         },
+      },
+      statuses: {
+        id: 'ID',
+        name: 'Наименование',
+        createdAt: 'Дата создания',
+        actions: 'Действия',
+        create: 'Создать',
+        update: 'Изменить',
       },
       welcome: {
         index: {

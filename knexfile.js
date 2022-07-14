@@ -32,7 +32,7 @@ export const production = {
     connectionString: process.env.DATABASE_URL,
     user: 'postgres',
     ssl: { rejectUnauthorized: false },
-    filename: './database.bki',
+    filename: './database.sqlite',
   },
   useNullAsDefault: true,
   migrations,

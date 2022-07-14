@@ -1,0 +1,8 @@
+extends ../layouts/application.pug
+
+block header
+  = t('layouts.application.createStatus')
+block content
+  +formFor()(action=route('statuses') method='post')
+    +input(status, 'name', value =t('views.statuses.name'), errors)(type="text")
+    +submit(status)(value=t('views.statuses.create'))
