@@ -1,0 +1,16 @@
+extends ../layouts/application.pug
+
+block header
+  = t('layouts.application.createTask')
+
+block content
+  +formFor()(action=route('tasks') method='post')
+    +input(task, 'name', value =t('views.tasks.name'), errors)(type="text")
+    +textArea(task, 'description', value =t('views.tasks.description'), errors)(type="text")
+    +select(task, 'statusId', statuses, value =t('views.tasks.status'), errors)
+    +select(task, 'executorId', users, value =t('views.tasks.executor'), errors)
+    //+input(task, 'markId', value =t('views.tasks.marks'), errors)(type="text")
+      select.form-select(multiple='' aria-label='multiple select example')
+        each mark in marks                          СКОРО!!!
+          option= mark.name
+    +submit(task)(value=t('views.tasks.create'))

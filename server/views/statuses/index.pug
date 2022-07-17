@@ -4,7 +4,7 @@ block header
   = t('layouts.application.statuses')
 block content
   //table.table.table-striped
-  a.btn.btn-primary(href=`/statuses/new` role='button') Создать статус
+  a.btn.btn-primary(href=`/statuses/new` role='button')= t('views.statuses.createStatus')
   table.table.table-dark.table-striped
     thead
       tr
@@ -20,5 +20,5 @@ block content
           td= formatDate(taskStatus.createdAt)
           td
             .btn-group(role='group' aria-label='Basic mixed styles example')
-              a.btn.btn-primary(href=`/statuses/${taskStatus.id}/edit` role='button') Изменить
-              +buttonTo(`/statuses/${taskStatus.id}`, 'delete')(class="btn btn-outline-danger me-2" value='Удалить')
+              a.btn.btn-primary(href=`/statuses/${taskStatus.id}/edit` role='button')= t('views.statuses.update')
+              +buttonTo(`/statuses/${taskStatus.id}`, 'delete')(class="btn btn-outline-danger me-2" value= t('views.statuses.delete'))

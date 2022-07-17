@@ -51,6 +51,7 @@ main
         .text-end
         if isAuthenticated()
           a.nav-link.px-2.text-white(href=route('statuses') role='button')= t('layouts.application.statuses')
+          a.nav-link.px-2.text-white(href=route('tasks') role='button')= t('layouts.application.tasks')
           +buttonTo(route('session'), 'delete')(class="btn btn-outline-danger me-2" value=t('layouts.application.signOut'))
         else
           //button.btn.btn-outline-light.me-2(type='button')

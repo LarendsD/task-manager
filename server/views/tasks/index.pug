@@ -1,0 +1,31 @@
+extends ../layouts/application.pug
+
+block header
+  = t('layouts.application.tasks')
+block content
+  //table.table.table-striped
+  a.btn.btn-primary(href=`/tasks/new` role='button')= t('views.tasks.create')
+  table.table.table-dark.table-striped
+    thead
+      tr
+        th= t('views.tasks.id')
+        th= t('views.tasks.name')
+        th= t('views.tasks.status')
+        th= t('views.tasks.author')
+        th= t('views.tasks.executor')
+        th= t('views.statuses.createdAt')
+        th= t('views.statuses.actions')
+    tbody
+      each task in tasks
+        tr
+          td= task.id
+          td
+            a(href = `/tasks/${task.id}`)= task.name
+          td= task.statusName
+          td= `${task.creatorFirstName} ${task.creatorLastName}`
+          td= `${task.executorFirstName} ${task.executorLastName}`
+          td= formatDate(task.createdAt)
+          td
+            .btn-group(role='group' aria-label='Basic mixed styles example')
+              a.btn.btn-primary(href=`/tasks/${task.id}/edit` role='button')= t('views.tasks.update')
+              +buttonTo(`/tasks/${task.id}`, 'delete')(class="btn btn-outline-danger me-2" value=t('views.tasks.delete'))

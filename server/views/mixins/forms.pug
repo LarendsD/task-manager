@@ -23,6 +23,55 @@ mixin input(entity, propertyName, name, errors = {})
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
+mixin textArea(entity, propertyName, name, defaultText = '', errors = {})
+  - propertyErrors = _.get(errors, propertyName)
+  - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
+  - inputId = getInputId(propertyName)
+  .mb-3(class=(errors[propertyName] && 'has-danger'))
+    label(
+      for= inputId
+    )= name 
+    textarea(
+      id= inputId 
+      name=getInputName(propertyName)
+      class= classLine
+      cols="30"
+      rows="3"
+    )&attributes(attributes)= defaultText 
+    if !_.isEmpty(propertyErrors)
+      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
+mixin select(entity, propertyName, entities, name, def = null, errors = {})
+  - propertyErrors = _.get(errrors, propertyName)
+  - classLine = 'form-select' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
+  - inputId = getInputId(propertyName)
+  .mb-3
+    label(
+      for= inputId
+    )= name
+    select(
+      required
+      id= inputId 
+      name=getInputName(propertyName)
+      class= classLine 
+      value=_.get(entity, propertyName, '')
+    )&attributes(attributes)
+      if !def
+        option
+      each setEntity in entities
+        if !setEntity.name
+          if `${setEntity.firstName} ${setEntity.lastName}` !== def
+            option(value= setEntity.id)= `${setEntity.firstName} ${setEntity.lastName}`
+          else 
+            option(selected, value= setEntity.id)= def
+        else
+          if setEntity.name !== def 
+            option(value= setEntity.id)= setEntity.name
+          else 
+            option(selected, value= setEntity.id)= def
+    if !_.isEmpty(propertyErrors)
+      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
 mixin submit(form = null)
   input(class='btn btn-primary' type='submit')&attributes(attributes)
 

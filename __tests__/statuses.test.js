@@ -76,9 +76,8 @@ describe('test statuses CRUD', () => {
       },
     });
     expect(response.statusCode).toBe(302);
-    const expected = params;
     const status = await models.taskStatus.query().findOne({ name: params.name });
-    expect(status).toMatchObject(expected);
+    expect(status).toMatchObject(params);
   });
 
   it('read', async () => {
@@ -119,6 +118,7 @@ describe('test statuses CRUD', () => {
       url: 'statuses/2',
     });
     expect(responseNoAuth.statusCode).toBe(302);
+    await models.task.query().delete().where('statusId', 2);
     const cookie = await logIn(testData.users.existing);
     const response = await app.inject({
       method: 'DELETE',
@@ -130,8 +130,13 @@ describe('test statuses CRUD', () => {
     expect(deletedStatus).toBeUndefined();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
+    // Пока Segmentation fault: 11
+    // после каждого теста откатываем миграции
     // await knex.migrate.rollback();
+  });
+
+  afterAll(async () => {
     await app.close();
   });
 });

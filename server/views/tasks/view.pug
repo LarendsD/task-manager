@@ -1,0 +1,29 @@
+extends ../layouts/application.pug
+
+block header
+  = task.name 
+
+block content
+  .row.mt-5.p-5.shadow-lg.bg-dark
+    .col-12.col-md-8.order-2.order-md-1
+      .lead.fw-normal.mb-4 
+        = task.description
+    .col-12.col-md-4.border-start.px-3.order-1.order-md-2.mb-3.mb-md-0
+      //.mb-2
+        span.me-1.badge.bg-danger.text-white метка 1
+        span.me-1.badge.bg-info.text-white метка 2            ТУТ ДОЛЖНЫ БЫТЬ МЕТКИ
+        span.me-1.badge.bg-info.text-white метка 3
+      .d-flex.flex-wrap.mb-3
+        span.text-muted.me-2= t('views.tasks.author')
+        span= `${task.creatorFirstName} ${task.creatorLastName}`
+      .d-flex.flex-wrap.mb-3
+        span.text-muted.me-2= t('views.tasks.executor')
+        span= `${task.executorFirstName} ${task.executorLastName}`
+      .d-flex.flex-wrap.mb-3
+        span.text-muted.me-2= t('views.tasks.createdAt')
+        span 
+          = task.createdAt
+      .d-flex.flex-wrap
+        .btn-group(role='group' aria-label='Basic mixed styles example')
+          a.btn.btn-primary(href=`/tasks/${task.id}/edit` role='button')= t('views.tasks.update')
+          +buttonTo(`/tasks/${task.id}`, 'delete')(class="btn btn-outline-danger me-2" value=t('views.tasks.delete'))

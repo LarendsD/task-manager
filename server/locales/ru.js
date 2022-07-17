@@ -23,6 +23,7 @@ export default {
           success: 'Пользователь успешно зарегистрирован',
         },
         delete: {
+          error: 'Не удалось удалить пользователя',
           success: 'Пользователь успешно удален',
         },
       },
@@ -36,7 +37,22 @@ export default {
           success: 'Статус успешно создан',
         },
         delete: {
+          error: 'Не удалось удалить статус',
           success: 'Статус успешно удалён',
+        },
+      },
+      tasks: {
+        update: {
+          error: 'Не удалось изменить задачу',
+          success: 'Задача успешно изменена',
+        },
+        create: {
+          error: 'Не удалось создать задачу',
+          success: 'Задача успешно создана',
+        },
+        delete: {
+          error: 'Задачу может удалить только её автор',
+          success: 'Задача успешно удалена',
         },
       },
       accessError: 'Вы не можете редактировать или удалять другого пользователя',
@@ -52,6 +68,9 @@ export default {
         statuses: 'Статусы',
         createStatus: 'Создание статуса',
         updateStatus: 'Изменение статуса',
+        tasks: 'Задачи',
+        createTask: 'Создание задачи',
+        updateTask: 'Изменение задачи',
       },
     },
     views: {
@@ -83,6 +102,25 @@ export default {
         actions: 'Действия',
         create: 'Создать',
         update: 'Изменить',
+        delete: 'Удалить',
+        createStatus: 'Создать статус',
+      },
+      tasks: {
+        id: 'ID',
+        name: 'Наименование',
+        status: 'Статус',
+        author: 'Автор',
+        executor: 'Исполнитель',
+        createdAt: 'Дата создания',
+        create: 'Создать задачу',
+        update: 'Изменить',
+        delete: 'Удалить',
+        actions: 'Действия',
+        description: 'Описание',
+        marks: 'Метки',
+        new: {
+          create: 'Создать',
+        },
       },
       welcome: {
         index: {

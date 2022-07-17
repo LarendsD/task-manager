@@ -52,8 +52,13 @@ describe('test session', () => {
     expect(responseSignOut.statusCode).toBe(302);
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
+    // Пока Segmentation fault: 11
+    // после каждого теста откатываем миграции
     // await knex.migrate.rollback();
+  });
+
+  afterAll(async () => {
     await app.close();
   });
 });

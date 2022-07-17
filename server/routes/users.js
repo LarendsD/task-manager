@@ -53,9 +53,16 @@ export default (app) => {
         reply.redirect(app.reverse('users'));
         return reply;
       }
+      const executor = await app.objection.models.task.query().where('executorId', req.params.id);
+      const creator = await app.objection.models.task.query().where('creatorId', req.params.id);
+      if (executor.length !== 0 || creator.length !== 0) {
+        req.flash('error', i18next.t('flash.users.delete.error'));
+        reply.redirect(app.reverse('users'));
+        return reply;
+      }
       req.logOut();
       await app.objection.models.user.query().deleteById(req.params.id);
-      req.flash('error', i18next.t('flash.users.delete.success'));
+      req.flash('info', i18next.t('flash.users.delete.success'));
       reply.redirect('/users');
       return reply;
     })

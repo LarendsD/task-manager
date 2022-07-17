@@ -1,13 +1,11 @@
 // @ts-check
 
-import _ from 'lodash';
 import fastify from 'fastify';
 
 import init from '../server/plugin.js';
-import encrypt from '../server/lib/secure.cjs';
 import { getTestData, prepareData } from './helpers/index.js';
 
-describe('test users CRUD', () => {
+describe('test tasks CRUD', () => {
   let app;
   let knex;
   let models;
@@ -44,97 +42,121 @@ describe('test users CRUD', () => {
   });
 
   it('index', async () => {
+    const responseNoAuth = await app.inject({
+      method: 'GET',
+      url: app.reverse('tasks'),
+    });
+    expect(responseNoAuth.statusCode).toBe(302);
+    const cookie = await logIn(testData.users.existing);
     const response = await app.inject({
       method: 'GET',
-      url: app.reverse('users'),
+      url: app.reverse('tasks'),
+      cookies: cookie,
     });
     expect(response.statusCode).toBe(200);
   });
 
   it('new', async () => {
+    const responseNoAuth = await app.inject({
+      method: 'GET',
+      url: app.reverse('createTask'),
+    });
+    expect(responseNoAuth.statusCode).toBe(302);
+    const cookie = await logIn(testData.users.existing);
     const response = await app.inject({
       method: 'GET',
-      url: app.reverse('newUser'),
+      url: app.reverse('createTask'),
+      cookies: cookie,
+    });
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('read', async () => {
+    const responseNoAuth = await app.inject({
+      method: 'GET',
+      url: 'tasks/1',
+    });
+    expect(responseNoAuth.statusCode).toBe(302);
+    const cookie = await logIn(testData.users.existing);
+    const response = await app.inject({
+      method: 'GET',
+      url: 'tasks/1',
+      cookies: cookie,
+    });
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('edit', async () => {
+    const responseNoAuth = await app.inject({
+      method: 'GET',
+      url: 'tasks/2/edit',
+    });
+    expect(responseNoAuth.statusCode).toBe(302);
+    const cookie = await logIn(testData.users.existing);
+    const response = await app.inject({
+      method: 'GET',
+      url: 'tasks/2/edit',
+      cookies: cookie,
     });
     expect(response.statusCode).toBe(200);
   });
 
   it('create', async () => {
-    const params = testData.users.new;
+    const cookie = await logIn(testData.users.existing);
+    const params = testData.tasks.new;
     const response = await app.inject({
       method: 'POST',
-      url: app.reverse('users'),
+      url: app.reverse('tasks'),
       payload: {
         data: params,
       },
+      cookies: cookie,
     });
-
     expect(response.statusCode).toBe(302);
-    const expected = {
-      ..._.omit(params, 'password'),
-      passwordDigest: encrypt(params.password),
-    };
-    const user = await models.user.query().findOne({ email: params.email });
-    expect(user).toMatchObject(expected);
-  });
-
-  it('read', async () => {
-    const noAuth = await app.inject({
-      method: 'GET',
-      url: '/users/2/edit',
-    });
-    expect(noAuth.statusCode).toBe(302);
-    const cookie = await logIn(testData.users.existing);
-    const withAuth = await app.inject({
-      method: 'GET',
-      url: '/users/10/edit',
-      cookies: cookie,
-    });
-    expect(withAuth.statusCode).toBe(302);
-    const trueUser = await app.inject({
-      method: 'GET',
-      url: '/users/2/edit',
-      cookies: cookie,
-    });
-    expect(trueUser.statusCode).toBe(200);
+    const task = await models.task.query().findOne({ name: params.name });
+    expect(task).toMatchObject(params);
   });
 
   it('update', async () => {
-    const cookie = await logIn(testData.users.existing);
-    const { email } = testData.users;
-    testData.users.existing.email = 'newEmail@mail.ru';
+    const cookie = await logIn(testData.tasks.existing);
+    const { name } = testData.tasks.existing;
+    testData.tasks.existing.name = 'Сделать еще кое-что';
     const response = await app.inject({
       method: 'POST',
-      url: '/users/2',
+      url: '/tasks/1',
       cookies: cookie,
       payload: {
-        data: testData.users.existing,
+        data: testData.tasks.existing,
       },
     });
     expect(response.statusCode).toBe(302);
-    const updatedUser = await models.user.query().findById(2);
-    expect(updatedUser.email).not.toBe(email);
+    const updatedTask = await models.task.query().findById(1);
+    expect(updatedTask.name).not.toBe(name);
   });
 
   it('delete', async () => {
     const responseNoAuth = await app.inject({
       method: 'DELETE',
-      url: 'users/2',
+      url: 'tasks/2',
     });
-    const user = await models.user.query().findById(2);
     expect(responseNoAuth.statusCode).toBe(302);
-    expect(user).not.toBeUndefined();
     const cookie = await logIn(testData.users.existing);
-    await models.task.query().delete().where('creatorId', 2);
-    await models.task.query().delete().where('executorId', 2);
-    const response = await app.inject({
+    const withAuth = await app.inject({
       method: 'DELETE',
-      url: 'users/2',
+      url: 'tasks/2',
       cookies: cookie,
     });
-    const deletedUser = await models.user.query().findById(2);
+    expect(withAuth.statusCode).toBe(302);
+    const task = await models.task.query().findById(2);
+    expect(task).not.toBeUndefined();
+    const response = await app.inject({
+      method: 'DELETE',
+      url: 'tasks/4',
+      cookies: cookie,
+    });
     expect(response.statusCode).toBe(302);
-    expect(deletedUser).toBeUndefined();
+    const deletedTask = await models.task.query().findById(4);
+    expect(deletedTask).toBeUndefined();
   });
 
   afterEach(async () => {
