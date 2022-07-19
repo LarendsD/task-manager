@@ -55,6 +55,20 @@ export default {
           success: 'Задача успешно удалена',
         },
       },
+      labels: {
+        update: {
+          error: 'Не удалось изменить метку',
+          success: 'Метка успешно изменена',
+        },
+        create: {
+          error: 'Не удалось создать метку',
+          success: 'Метка успешно создана',
+        },
+        delete: {
+          error: 'Не удалось удалить метку',
+          success: 'Метка успешно удалена',
+        },
+      },
       accessError: 'Вы не можете редактировать или удалять другого пользователя',
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
     },
@@ -71,6 +85,9 @@ export default {
         tasks: 'Задачи',
         createTask: 'Создание задачи',
         updateTask: 'Изменение задачи',
+        labels: 'Метки',
+        createLabel: 'Создание метки',
+        updateLabel: 'Изменение метки',
       },
     },
     views: {
@@ -117,10 +134,20 @@ export default {
         delete: 'Удалить',
         actions: 'Действия',
         description: 'Описание',
-        marks: 'Метки',
+        labels: 'Метки',
         new: {
           create: 'Создать',
         },
+      },
+      labels: {
+        id: 'ID',
+        name: 'Наименование',
+        createdAt: 'Дата создания',
+        actions: 'Действия',
+        create: 'Создать',
+        update: 'Изменить',
+        delete: 'Удалить',
+        createLabel: 'Создать метку',
       },
       welcome: {
         index: {

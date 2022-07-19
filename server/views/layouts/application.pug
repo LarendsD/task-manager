@@ -6,18 +6,19 @@ head
   script(src=assetPath('main.js'))
   link(href=assetPath('main.css') rel="stylesheet")
   meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+
   style.
     .bd-placeholder-img {
-    font-size: 1.125rem;
-    text-anchor: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
     }
     @media (min-width: 768px) {
-    .bd-placeholder-img-lg {
-    font-size: 3.5rem;
-    }
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
     }
 svg(xmlns='http://www.w3.org/2000/svg' style='display: none;')
   symbol#bootstrap(viewbox='0 0 118 94')
@@ -51,12 +52,11 @@ main
         .text-end
         if isAuthenticated()
           a.nav-link.px-2.text-white(href=route('statuses') role='button')= t('layouts.application.statuses')
+          a.nav-link.px-2.text-white(href=route('labels') role='button')= t('layouts.application.labels')
           a.nav-link.px-2.text-white(href=route('tasks') role='button')= t('layouts.application.tasks')
           +buttonTo(route('session'), 'delete')(class="btn btn-outline-danger me-2" value=t('layouts.application.signOut'))
         else
-          //button.btn.btn-outline-light.me-2(type='button')
           a.btn.btn-outline-light.me-2(href=route('newSession') role='button')= t('layouts.application.signIn')
-          //button.btn.btn-warning(type='button')
           a.btn.btn.btn-warning(href=route('newUser') role='button')= t('layouts.application.signUp')
 
       each messages, type in reply.flash() || []

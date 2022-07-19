@@ -31,7 +31,8 @@ export default (app) => {
       }
       const statuses = await app.objection.models.taskStatus.query();
       const users = await app.objection.models.user.query();
-      reply.render('tasks/new', { statuses, users });
+      const labels = await app.objection.models.label.query();
+      reply.render('tasks/new', { statuses, users, labels });
       return reply;
     })
 
@@ -51,7 +52,8 @@ export default (app) => {
           creator: true,
         })
         .findById(req.params.id);
-      reply.render('tasks/view', { task });
+      const labels = await task.$relatedQuery('labels');
+      reply.render('tasks/view', { task, labels });
       return reply;
     })
 
@@ -71,7 +73,12 @@ export default (app) => {
         .findById(req.params.id);
       const statuses = await app.objection.models.taskStatus.query();
       const users = await app.objection.models.user.query();
-      reply.render('tasks/edit', { task, statuses, users });
+      const labels = await app.objection.models.label.query();
+      const relatedLabels = await task.$relatedQuery('labels');
+      const labelNames = relatedLabels.map((label) => label.name);
+      reply.render('tasks/edit', {
+        task, statuses, users, labels, labelNames,
+      });
       return reply;
     })
 
@@ -80,23 +87,40 @@ export default (app) => {
       req.body.data.creatorId = user.id;
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
+      const {
+        name, description, statusId, executorId, creatorId, labelIds,
+      } = req.body.data;
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
-      task.$set(req.body.data);
+      const labels = await app.objection.models.label.query();
+      task.$set({
+        name, description, statusId, executorId, creatorId,
+      });
 
       try {
-        const validTask = await app.objection.models.task.fromJson(req.body.data);
-        await app.objection.models.task.query().insert(validTask);
+        const validTask = await app.objection.models.task.fromJson({
+          name, description, statusId, executorId, creatorId,
+        });
+        await app.objection.models.task.transaction(async (trx) => {
+          await app.objection.models.task.query(trx).insert(validTask);
+          const createdTask = await app.objection.models.task.query(trx).where(validTask);
+          const taskId = createdTask[0].id;
+          const insert = Array.from(labelIds).map(async (label) => {
+            const labelId = Number(label);
+            await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
+          });
+          const result = Promise.all(insert);
+          return result;
+        });
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         reply.render('tasks/new', {
-          task, users, statuses, errors: data,
+          task, users, statuses, labels, errors: data,
         });
       }
-
       return reply;
     })
 
@@ -104,9 +128,26 @@ export default (app) => {
       const { id } = req.params;
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
+      const {
+        name, description, statusId, executorId, labelIds,
+      } = req.body.data;
       const task = await app.objection.models.task.query().findById(req.params.id);
       try {
-        await task.$query().patch(req.body.data);
+        await app.objection.models.task.transaction(async (trx) => {
+          await task.$query(trx).patch({
+            name, description, statusId, executorId,
+          });
+          await app.objection.models.taskLabels.query(trx)
+            .delete()
+            .where('task_id', id);
+          const insert = Array.from(labelIds).map(async (label) => {
+            const labelId = Number(label);
+            await app.objection.models.taskLabels.query(trx)
+              .insert({ taskId: Number(id), labelId });
+          });
+          const result = Promise.all(insert);
+          return result;
+        });
         req.flash('info', i18next.t('flash.tasks.update.success'));
         reply.redirect(app.reverse('tasks'));
       } catch ({ data }) {
@@ -128,9 +169,19 @@ export default (app) => {
         reply.redirect(app.reverse('tasks'));
         return reply;
       }
-      await app.objection.models.task.query().deleteById(req.params.id);
-      req.flash('info', i18next.t('flash.tasks.delete.success'));
-      reply.redirect('/tasks');
+      try {
+        await app.objection.models.task.transaction(async (trx) => {
+          await app.objection.models.taskLabels.query(trx)
+            .delete()
+            .where('task_id', req.params.id);
+          await app.objection.models.task.query(trx).deleteById(req.params.id);
+        });
+        req.flash('info', i18next.t('flash.tasks.delete.success'));
+        reply.redirect('/tasks');
+      } catch ({ data }) {
+        req.flash('error', i18next.t('flash.tasks.delete.error'));
+        reply.redirect(app.reverse('tasks'));
+      }
       return reply;
     });
 };

@@ -9,8 +9,5 @@ block content
     +textArea(task, 'description', value =t('views.tasks.description'), task.description, errors)(type="text")
     +select(task, 'statusId', statuses, value =t('views.tasks.status'), task.statusName, errors)
     +select(task, 'executorId', users, value =t('views.tasks.executor'), `${task.executorFirstName} ${task.executorLastName}`, errors)
-    //+input(task, 'markId', value =t('views.tasks.marks'), errors)(type="text")
-      select.form-select(multiple='' aria-label='multiple select example')
-        each mark in marks                          СКОРО!!!
-          option= mark.name
+    +select(task, 'labelIds', labels, value =t('views.tasks.labels'), labelNames, errors)(multiple)
     +submit(task)(value=t('views.tasks.update'))

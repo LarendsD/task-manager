@@ -36,5 +36,13 @@
       "creatorId": 10,
       "executorId": 2
     }
+  },
+  "labels": {
+    "new": {
+      "name": "Тестирование"
+    },
+    "existing": {
+      "name": "Express"
+    }
   }
 }

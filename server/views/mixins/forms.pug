@@ -37,7 +37,7 @@ mixin textArea(entity, propertyName, name, defaultText = '', errors = {})
       class= classLine
       cols="30"
       rows="3"
-    )&attributes(attributes)= defaultText 
+    )&attributes(attributes)= _.get(entity, propertyName, '')
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
@@ -65,10 +65,10 @@ mixin select(entity, propertyName, entities, name, def = null, errors = {})
           else 
             option(selected, value= setEntity.id)= def
         else
-          if setEntity.name !== def 
+          if !def.includes(setEntity.name)
             option(value= setEntity.id)= setEntity.name
-          else 
-            option(selected, value= setEntity.id)= def
+          else
+            option(selected, value= setEntity.id)= setEntity.name
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
