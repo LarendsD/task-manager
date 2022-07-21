@@ -40,7 +40,6 @@ export default (app) => {
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
-      console.log(tasks);
       reply.render('tasks/index', {
         tasks, users, statuses, labels, queries,
       });

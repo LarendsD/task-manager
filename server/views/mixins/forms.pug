@@ -86,8 +86,7 @@ mixin alterSelect(entity, propertyName, entities, name, def = null, errors = {})
         class= classLine 
         value=_.get(entity, propertyName, '')
       )&attributes(attributes)
-        if def.length === 0
-          option
+        option
         each setEntity in entities
           if !setEntity.name
             if !def.includes(String(setEntity.id))
