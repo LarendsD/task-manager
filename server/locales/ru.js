@@ -135,6 +135,9 @@ export default {
         actions: 'Действия',
         description: 'Описание',
         labels: 'Метки',
+        label: 'Метка',
+        show: 'Показать',
+        onlyMyTasks: 'Только мои задачи',
         new: {
           create: 'Создать',
         },

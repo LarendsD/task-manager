@@ -4,7 +4,21 @@ block header
   = t('layouts.application.tasks')
 block content
   //table.table.table-striped
-  a.btn.btn-primary(href=`/tasks/new` role='button')= t('views.tasks.create')
+  a.btn.mb-5.btn-primary(href=`/tasks/new` role='button')= t('views.tasks.create')
+  .card.mb-5.mt-1.p-1.shadow-lg.bg-dark
+    .card-body.p-4
+      +formFor()(action=route('tasks') method='get')
+        .row
+          +alterSelect(status, 'status', statuses, value =t('views.tasks.status'), queries.status, errors)
+          +alterSelect(executor, 'executor', users, value =t('views.tasks.executor'), queries.executor, errors)
+          +alterSelect(label, 'labels', labels, value =t('views.tasks.label'), queries.labels, errors)
+        .mb-3.form-check
+          if queries.isCreatorUser === 'On'
+            input#data_isCreatorUser.form-check-input(type='checkbox' name='isCreatorUser' checked)
+          else
+            input#data_isCreatorUser.form-check-input(type='checkbox' name='isCreatorUser')
+          label.form-check-label(for='data_isCreatorUser')= t('views.tasks.onlyMyTasks')
+        input.btn.btn-primary(type='submit' value= t('views.tasks.show'))
   table.table.table-dark.table-striped
     thead
       tr
@@ -21,9 +35,9 @@ block content
           td= task.id
           td
             a(href = `/tasks/${task.id}`)= task.name
-          td= task.statusName
-          td= `${task.creatorFirstName} ${task.creatorLastName}`
-          td= `${task.executorFirstName} ${task.executorLastName}`
+          td= task.statuses.name
+          td= `${task.creator.firstName} ${task.creator.lastName}`
+          td= `${task.executor.firstName} ${task.executor.lastName}`
           td= formatDate(task.createdAt)
           td
             .btn-group(role='group' aria-label='Basic mixed styles example')

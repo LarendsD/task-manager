@@ -10,16 +10,40 @@ export default (app) => {
         reply.redirect(app.reverse('root'));
         return reply;
       }
+      const queries = {
+        status: [],
+        labels: [],
+        executor: [],
+        isCreatorUser: '',
+      };
       const tasks = await app.objection.models.task.query()
-        .select('tasks.id', 'tasks.name', 'tasks.created_at', 'statuses.name as statusName', `
-        executor.firstName as executorFirstName`, 'executor.lastName as executorLastName', `
-        creator.firstName as creatorFirstName`, 'creator.lastName as creatorLastName')
-        .joinRelated({
-          statuses: true,
-          executor: true,
-          creator: true,
+        .withGraphJoined('[statuses, executor, creator, labels]')
+        .select('tasks.id', 'tasks.name', 'tasks.createdAt')
+        .where((task) => {
+          if (req.query.status) {
+            task.where('statuses.id', req.query.status);
+            queries.status.push(req.query.status);
+          }
+          if (req.query.executor) {
+            task.where('executor.id', req.query.executor);
+            queries.executor.push(req.query.executor);
+          }
+          if (req.query.labels) {
+            task.where('labels.id', req.query.labels);
+            queries.labels.push(req.query.labels);
+          }
+          if (req.query.isCreatorUser) {
+            task.where('creator.id', req.user.id);
+            queries.isCreatorUser = 'On';
+          }
         });
-      reply.render('tasks/index', { tasks });
+      const users = await app.objection.models.user.query();
+      const statuses = await app.objection.models.taskStatus.query();
+      const labels = await app.objection.models.label.query();
+      console.log(tasks);
+      reply.render('tasks/index', {
+        tasks, users, statuses, labels, queries,
+      });
       return reply;
     })
 

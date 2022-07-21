@@ -9,19 +9,18 @@ mixin input(entity, propertyName, name, errors = {})
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
-  .mb-3(class=(errors[propertyName] && 'has-danger'))
-    label(
-      for= inputId
-    )= name
-    //= propertyName
-    input(
-      id= inputId
-      name=getInputName(propertyName)
-      class=classLine
-      value=_.get(entity, propertyName, '')
-    )&attributes(attributes)
-    if !_.isEmpty(propertyErrors)
-      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+    .mb-3(class=(errors[propertyName] && 'has-danger'))
+      label(
+        for= inputId
+      )= name
+      input(
+        id= inputId
+        name=getInputName(propertyName)
+        class=classLine
+        value=_.get(entity, propertyName, '')
+      )&attributes(attributes)
+      if !_.isEmpty(propertyErrors)
+        .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
 mixin textArea(entity, propertyName, name, defaultText = '', errors = {})
   - propertyErrors = _.get(errors, propertyName)
@@ -56,7 +55,7 @@ mixin select(entity, propertyName, entities, name, def = null, errors = {})
       class= classLine 
       value=_.get(entity, propertyName, '')
     )&attributes(attributes)
-      if !def
+      if def.length === 0
         option
       each setEntity in entities
         if !setEntity.name
@@ -71,6 +70,37 @@ mixin select(entity, propertyName, entities, name, def = null, errors = {})
             option(selected, value= setEntity.id)= setEntity.name
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
+mixin alterSelect(entity, propertyName, entities, name, def = null, errors = {})
+  - propertyErrors = _.get(errrors, propertyName)
+  - classLine = 'form-select' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
+  - inputId = getInputId(propertyName)
+  .col-12.col-md
+    .input-group.mb-3
+      label.input-group-text(
+        for= inputId
+      )= name
+      select(
+        id= inputId
+        name= propertyName
+        class= classLine 
+        value=_.get(entity, propertyName, '')
+      )&attributes(attributes)
+        if def.length === 0
+          option
+        each setEntity in entities
+          if !setEntity.name
+            if !def.includes(String(setEntity.id))
+              option(value= setEntity.id)= `${setEntity.firstName} ${setEntity.lastName}`
+            else 
+              option(selected, value= setEntity.id)= `${setEntity.firstName} ${setEntity.lastName}`
+          else
+            if !def.includes(String(setEntity.id))
+              option(value= setEntity.id)= setEntity.name
+            else
+              option(selected, value= setEntity.id)= setEntity.name
+      if !_.isEmpty(propertyErrors)
+        .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
 mixin submit(form = null)
   input(class='btn btn-primary' type='submit')&attributes(attributes)

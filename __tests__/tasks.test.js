@@ -56,6 +56,28 @@ describe('test tasks CRUD', () => {
     expect(response.statusCode).toBe(200);
   });
 
+  it('indexWithFilters', async () => {
+    const cookie = await logIn(testData.users.existing);
+    const responseFullFilters = await app.inject({
+      method: 'GET',
+      url: `${app.reverse('tasks')}?status=3&executor=2&labels=1&isCreatorUser=on`,
+      cookies: cookie,
+    });
+    expect(responseFullFilters.statusCode).toBe(200);
+    const responseNoFilters = await app.inject({
+      method: 'GET',
+      url: `${app.reverse('tasks')}?status=&executor=&labels=`,
+      cookies: cookie,
+    });
+    expect(responseNoFilters.statusCode).toBe(200);
+    const response = await app.inject({
+      method: 'GET',
+      url: `${app.reverse('tasks')}?status=&executor=&labels=1&isCreatorUser=on`,
+      cookies: cookie,
+    });
+    expect(response.statusCode).toBe(200);
+  });
+
   it('new', async () => {
     const responseNoAuth = await app.inject({
       method: 'GET',
@@ -153,11 +175,11 @@ describe('test tasks CRUD', () => {
     expect(task).not.toBeUndefined();
     const response = await app.inject({
       method: 'DELETE',
-      url: 'tasks/4',
+      url: 'tasks/3',
       cookies: cookie,
     });
     expect(response.statusCode).toBe(302);
-    const deletedTask = await models.task.query().findById(4);
+    const deletedTask = await models.task.query().findById(3);
     expect(deletedTask).toBeUndefined();
   });
 

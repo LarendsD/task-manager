@@ -3,21 +3,21 @@
         "name": "Написать нормальные тесты",
         "description": "Тесты не работают, исправить",
         "statusId": 1,
-        "creatorId": 2,
-        "executorId": 2
+        "creatorId": 3,
+        "executorId": 1
     },
     {
         "name": "Сходить в магазин",
         "description": "Захватить что-нибудь вкусненькое",
         "statusId": 2,
-        "creatorId": 10,
-        "executorId": 10
+        "creatorId": 3,
+        "executorId": 3
     },
     {
         "name": "Пойти домой",
         "description": "Сходить домой после рабочего дня",
         "statusId": 1,
-        "creatorId": 10,
+        "creatorId": 2,
         "executorId": 2
     }
 ]
