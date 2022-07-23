@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import fastifyStatic from 'fastify-static';
 import fastifyErrorPage from 'fastify-error-page';
+import Rollbar from 'rollbar';
 
 import pointOfView from 'point-of-view';
 import fastifyFormbody from 'fastify-formbody';
@@ -77,6 +78,18 @@ const addHooks = (app) => {
   });
 };
 
+const rollbar = new Rollbar({
+  accessToken: process.env.ACCESS_TOKEN,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
+
+const errorHandler = (app) => {
+  app.setErrorHandler((error, request, reply) => {
+    rollbar.error(`Error: ${error}`, request, reply);
+  });
+};
+
 const registerPlugins = (app) => {
   app.register(fastifySensible);
   app.register(fastifyErrorPage);
@@ -116,12 +129,12 @@ const registerPlugins = (app) => {
 // eslint-disable-next-line no-unused-vars
 export default async (app, options) => {
   registerPlugins(app);
-
   await setupLocalization();
   setUpViews(app);
   setUpStaticAssets(app);
   addRoutes(app);
   addHooks(app);
+  errorHandler(app);
 
   return app;
 };
