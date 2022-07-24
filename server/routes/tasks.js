@@ -101,7 +101,6 @@ export default (app) => {
       req.body.data.creatorId = user.id;
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
-      console.log(req.body.data);
       const {
         name, description, statusId, executorId, creatorId, ...selectedLabels
       } = req.body.data;
@@ -121,7 +120,6 @@ export default (app) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
           const taskId = createdTask[0].id;
-          console.log(selectedLabels);
           if (selectedLabels.labels) {
             const insert = Array.from(selectedLabels.labels).map(async (label) => {
               const labelId = Number(label);

@@ -44,7 +44,6 @@ mixin select(entity, propertyName, entities = [], name, def = null, errors = {})
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-select' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
-  - console.log(def)
   .mb-3
     label(
       for= inputId
