@@ -80,17 +80,10 @@ export default (app) => {
         reply.redirect(app.reverse('root'));
         return reply;
       }
-      //const task = await app.objection.models.task.query()
-      //  .select('tasks.id', 'tasks.name', 'tasks.description', 'statuses.name as statusName', `
-      //  executor.firstName as executorFirstName`, 'executor.lastName as executorLastName')
-      //  .joinRelated({
-      //    statuses: true,
-      //    executor: true,
-      //  })
-      //  .findById(req.params.id);
+      const { id } = req.params;
       const task = await app.objection.models.task.query()
         .withGraphJoined('[statuses, executor]')
-        .select('tasks.name', 'tasks.description')
+        .select('tasks.name', 'tasks.description', 'tasks.id')
         .findById(req.params.id);
       const statuses = await app.objection.models.taskStatus.query();
       const users = await app.objection.models.user.query();
@@ -98,7 +91,7 @@ export default (app) => {
       const relatedLabels = await task.$relatedQuery('labels');
       const labelNames = relatedLabels.map((label) => label.name);
       reply.render('tasks/edit', {
-        task, statuses, users, labels, labelNames,
+        task, statuses, users, labels, labelNames, id,
       });
       return reply;
     })
