@@ -12,7 +12,7 @@ export default (app) => {
       }
       const queries = {
         status: [],
-        labels: [],
+        label: [],
         executor: [],
         isCreatorUser: '',
       };
@@ -28,9 +28,9 @@ export default (app) => {
             task.where('executor.id', req.query.executor);
             queries.executor.push(req.query.executor);
           }
-          if (req.query.labels) {
-            task.where('labels.id', req.query.labels);
-            queries.labels.push(req.query.labels);
+          if (req.query.label) {
+            task.where('labels.id', req.query.label);
+            queries.label.push(req.query.label);
           }
           if (req.query.isCreatorUser) {
             task.where('creator.id', req.user.id);
