@@ -9,10 +9,9 @@ export const up = (knex) => {
     table.string('password_digest');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
-  },
-  ).then(() => console.log('users done'))
-}
+  }).then(() => console.log('users done'));
+};
 
 export const down = (knex) => {
-  return knex.schema.dropTable('users').then(() => console.log('drop users done!'))
-}
+  return knex.schema.dropTable('users').then(() => console.log('drop users done!'));
+};
