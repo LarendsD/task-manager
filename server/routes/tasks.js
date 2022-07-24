@@ -102,20 +102,16 @@ export default (app) => {
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
       const {
-        name, description, statusId, executorId, creatorId, labels,
+        labels, ...setTask
       } = req.body.data;
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const allLabels = await app.objection.models.label.query();
-      task.$set({
-        name, description, statusId, executorId, creatorId,
-      });
+      task.$set({ setTask });
 
       try {
-        const validTask = await app.objection.models.task.fromJson({
-          name, description, statusId, executorId, creatorId,
-        });
+        const validTask = await app.objection.models.task.fromJson({ setTask });
         await app.objection.models.task.transaction(async (trx) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
@@ -146,14 +142,12 @@ export default (app) => {
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
       const {
-        name, description, statusId, executorId, labels,
+        labels, ...patchTask
       } = req.body.data;
       const task = await app.objection.models.task.query().findById(req.params.id);
       try {
         await app.objection.models.task.transaction(async (trx) => {
-          await task.$query(trx).patch({
-            name, description, statusId, executorId,
-          });
+          await task.$query(trx).patch({ patchTask });
           const update = await app.objection.models.taskLabels.query(trx)
             .delete()
             .where('task_id', id);

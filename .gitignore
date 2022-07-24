@@ -7,4 +7,5 @@ tmp/
 temp/
 database.sqlite
 .env
+.env.example
 coverage
