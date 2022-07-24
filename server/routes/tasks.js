@@ -129,12 +129,15 @@ export default (app) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
           const taskId = createdTask[0].id;
-          const insert = Array.from(labels).map(async (label) => {
-            const labelId = Number(label);
-            await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
-          });
-          const result = Promise.all(insert);
-          return result;
+          if (labels) {
+            const insert = Array.from(labels).map(async (label) => {
+              const labelId = Number(label);
+              await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
+            });
+            const result = Promise.all(insert);
+            return result;
+          }
+          return createdTask;
         });
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
