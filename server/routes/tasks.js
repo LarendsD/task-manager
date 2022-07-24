@@ -66,14 +66,8 @@ export default (app) => {
         return reply;
       }
       const task = await app.objection.models.task.query()
-        .select('tasks.id', 'tasks.name', 'tasks.created_at', 'tasks.description', 'statuses.name as statusName', `
-        executor.firstName as executorFirstName`, 'executor.lastName as executorLastName', `
-        creator.firstName as creatorFirstName`, 'creator.lastName as creatorLastName')
-        .joinRelated({
-          statuses: true,
-          executor: true,
-          creator: true,
-        })
+        .withGraphJoined('[statuses, executor, creator, labels]')
+        .select('tasks.id', 'tasks.name', 'tasks.createdAt', 'tasks.description')
         .findById(req.params.id);
       const labels = await task.$relatedQuery('labels');
       reply.render('tasks/view', { task, labels });
@@ -86,13 +80,17 @@ export default (app) => {
         reply.redirect(app.reverse('root'));
         return reply;
       }
+      //const task = await app.objection.models.task.query()
+      //  .select('tasks.id', 'tasks.name', 'tasks.description', 'statuses.name as statusName', `
+      //  executor.firstName as executorFirstName`, 'executor.lastName as executorLastName')
+      //  .joinRelated({
+      //    statuses: true,
+      //    executor: true,
+      //  })
+      //  .findById(req.params.id);
       const task = await app.objection.models.task.query()
-        .select('tasks.id', 'tasks.name', 'tasks.description', 'statuses.name as statusName', `
-        executor.firstName as executorFirstName`, 'executor.lastName as executorLastName')
-        .joinRelated({
-          statuses: true,
-          executor: true,
-        })
+        .withGraphJoined('[statuses, executor]')
+        .select('tasks.name', 'tasks.description')
         .findById(req.params.id);
       const statuses = await app.objection.models.taskStatus.query();
       const users = await app.objection.models.user.query();
@@ -175,7 +173,7 @@ export default (app) => {
             const result = Promise.all(insert);
             return result;
           }
-          return update
+          return update;
         });
         req.flash('info', i18next.t('flash.tasks.update.success'));
         reply.redirect(app.reverse('tasks'));

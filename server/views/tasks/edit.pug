@@ -7,7 +7,10 @@ block content
   +formFor()(action=`/tasks/${task.id}` method='post')
     +input(task, 'name', value =t('views.tasks.name'), errors)(type="text", value = task.name)
     +textArea(task, 'description', value =t('views.tasks.description'), task.description, errors)(type="text")
-    +select(task, 'statusId', statuses, value =t('views.tasks.status'), task.statusName, errors)(required)
-    +select(task, 'executorId', users, value =t('views.tasks.executor'), `${task.executorFirstName} ${task.executorLastName}`, errors)(required)
+    +select(task, 'statusId', statuses, value =t('views.tasks.status'), task.statuses.name, errors)
+    if !task.executor
+      +select(task, 'executorId', users, value =t('views.tasks.executor'), [], errors)
+    else
+      +select(task, 'executorId', users, value =t('views.tasks.executor'), `${task.executor.firstName} ${task.executor.lastName}`, errors)
     +select(task, 'labels', labels, value =t('views.tasks.labels'), labelNames, errors)(multiple)
     +submit(task)(value=t('views.tasks.update'))

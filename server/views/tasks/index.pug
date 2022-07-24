@@ -37,7 +37,10 @@ block content
             a(href = `/tasks/${task.id}`)= task.name
           td= task.statuses.name
           td= `${task.creator.firstName} ${task.creator.lastName}`
-          td= `${task.executor.firstName} ${task.executor.lastName}`
+          if !task.executor
+            td= ''
+          else 
+            td= `${task.executor.firstName} ${task.executor.lastName}`
           td= formatDate(task.createdAt)
           td
             .btn-group(role='group' aria-label='Basic mixed styles example')

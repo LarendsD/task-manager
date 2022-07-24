@@ -11,16 +11,19 @@ block content
     .col-12.col-md-4.border-start.px-3.order-1.order-md-2.mb-3.mb-md-0
       .mb-2
         span.me-1.badge.bg-danger.text-white
-            = task.statusName
+            = task.statuses.name
         each label in labels
           span.me-1.badge.bg-info.text-white
             = label.name
       .d-flex.flex-wrap.mb-3
         span.text-muted.me-2= t('views.tasks.author')
-        span= `${task.creatorFirstName} ${task.creatorLastName}`
+        span= `${task.creator.firstName} ${task.creator.lastName}`
       .d-flex.flex-wrap.mb-3
         span.text-muted.me-2= t('views.tasks.executor')
-        span= `${task.executorFirstName} ${task.executorLastName}`
+        if !task.executor
+          span= ''
+        else
+          span= `${task.executor.firstName} ${task.executor.lastName}`
       .d-flex.flex-wrap.mb-3
         span.text-muted.me-2= t('views.tasks.createdAt')
         span 
