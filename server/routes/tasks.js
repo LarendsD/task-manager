@@ -111,12 +111,12 @@ export default (app) => {
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
       const {
-        name, description, statusId, executorId, creatorId, labelIds,
+        name, description, statusId, executorId, creatorId, labels,
       } = req.body.data;
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
-      const labels = await app.objection.models.label.query();
+      const allLabels = await app.objection.models.label.query();
       task.$set({
         name, description, statusId, executorId, creatorId,
       });
@@ -129,7 +129,7 @@ export default (app) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
           const taskId = createdTask[0].id;
-          const insert = Array.from(labelIds).map(async (label) => {
+          const insert = Array.from(labels).map(async (label) => {
             const labelId = Number(label);
             await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
           });
@@ -141,7 +141,7 @@ export default (app) => {
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         reply.render('tasks/new', {
-          task, users, statuses, labels, errors: data,
+          task, users, statuses, allLabels, errors: data,
         });
       }
       return reply;

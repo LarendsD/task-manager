@@ -127,7 +127,7 @@ describe('test tasks CRUD', () => {
     const cookie = await logIn(testData.users.existing);
     const params = testData.tasks.new;
     const testParams = { ...params };
-    params.labelIds = [2, 3];
+    params.labels = [2, 3];
     const response = await app.inject({
       method: 'POST',
       url: app.reverse('tasks'),
