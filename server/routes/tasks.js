@@ -108,10 +108,10 @@ export default (app) => {
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const allLabels = await app.objection.models.label.query();
-      task.$set({ setTask });
+      task.$set(setTask);
 
       try {
-        const validTask = await app.objection.models.task.fromJson({ setTask });
+        const validTask = await app.objection.models.task.fromJson(setTask);
         await app.objection.models.task.transaction(async (trx) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
@@ -147,7 +147,7 @@ export default (app) => {
       const task = await app.objection.models.task.query().findById(req.params.id);
       try {
         await app.objection.models.task.transaction(async (trx) => {
-          await task.$query(trx).patch({ patchTask });
+          await task.$query(trx).patch(patchTask);
           const update = await app.objection.models.taskLabels.query(trx)
             .delete()
             .where('task_id', id);
