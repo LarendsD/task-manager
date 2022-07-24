@@ -121,8 +121,9 @@ export default (app) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
           const taskId = createdTask[0].id;
-          if (selectedLabels) {
-            const insert = Array.from(selectedLabels).map(async (label) => {
+          console.log(selectedLabels);
+          if (selectedLabels.labels) {
+            const insert = Array.from(selectedLabels.labels).map(async (label) => {
               const labelId = Number(label);
               await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
             });
