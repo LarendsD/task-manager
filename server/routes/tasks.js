@@ -155,7 +155,7 @@ export default (app) => {
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
       const {
-        name, description, statusId, executorId, labelIds,
+        name, description, statusId, executorId, labels,
       } = req.body.data;
       const task = await app.objection.models.task.query().findById(req.params.id);
       try {
@@ -163,16 +163,19 @@ export default (app) => {
           await task.$query(trx).patch({
             name, description, statusId, executorId,
           });
-          await app.objection.models.taskLabels.query(trx)
+          const update = await app.objection.models.taskLabels.query(trx)
             .delete()
             .where('task_id', id);
-          const insert = Array.from(labelIds).map(async (label) => {
-            const labelId = Number(label);
-            await app.objection.models.taskLabels.query(trx)
-              .insert({ taskId: Number(id), labelId });
-          });
-          const result = Promise.all(insert);
-          return result;
+          if (labels) {
+            const insert = Array.from(labels).map(async (label) => {
+              const labelId = Number(label);
+              await app.objection.models.taskLabels.query(trx)
+                .insert({ taskId: Number(id), labelId });
+            });
+            const result = Promise.all(insert);
+            return result;
+          }
+          return update
         });
         req.flash('info', i18next.t('flash.tasks.update.success'));
         reply.redirect(app.reverse('tasks'));
