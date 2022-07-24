@@ -101,23 +101,28 @@ export default (app) => {
       req.body.data.creatorId = user.id;
       req.body.data.statusId = Number(req.body.data.statusId);
       req.body.data.executorId = Number(req.body.data.executorId);
+      console.log(req.body.data);
       const {
-        labels, ...setTask
+        name, description, statusId, executorId, creatorId, ...selectedLabels
       } = req.body.data;
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
-      const allLabels = await app.objection.models.label.query();
-      task.$set(setTask);
+      const labels = await app.objection.models.label.query();
+      task.$set({
+        name, description, statusId, executorId, creatorId,
+      });
 
       try {
-        const validTask = await app.objection.models.task.fromJson(setTask);
+        const validTask = await app.objection.models.task.fromJson({
+          name, description, statusId, executorId, creatorId,
+        });
         await app.objection.models.task.transaction(async (trx) => {
           await app.objection.models.task.query(trx).insert(validTask);
           const createdTask = await app.objection.models.task.query(trx).where(validTask);
           const taskId = createdTask[0].id;
-          if (labels) {
-            const insert = Array.from(labels).map(async (label) => {
+          if (selectedLabels) {
+            const insert = Array.from(selectedLabels).map(async (label) => {
               const labelId = Number(label);
               await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
             });
@@ -131,7 +136,7 @@ export default (app) => {
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         reply.render('tasks/new', {
-          task, users, statuses, allLabels, errors: data,
+          task, users, statuses, labels, errors: data,
         });
       }
       return reply;
