@@ -1,7 +1,6 @@
 // @ts-check
 
-export const up = (knex) => {
-  return knex.schema.createTable('users', (table) => {
+export const up = (knex) => knex.schema.createTable('users', (table) => {
     table.increments('id').primary();
     table.string('first_name');
     table.string('last_name');
@@ -10,8 +9,7 @@ export const up = (knex) => {
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   }).then(() => console.log('users done'));
-};
 
-export const down = (knex) => {
-  return knex.schema.dropTable('users').then(() => console.log('drop users done!'));
-};
+export const down = (knex) => knex.schema.dropTable('users').then(() => console.log('drop users done!'));
+
+
