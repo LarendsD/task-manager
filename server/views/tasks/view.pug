@@ -27,7 +27,7 @@ block content
       .d-flex.flex-wrap.mb-3
         span.text-muted.me-2= t('views.tasks.createdAt')
         span 
-          = task.createdAt
+          = formatDate(task.createdAt)
       .d-flex.flex-wrap
         .btn-group(role='group' aria-label='Basic mixed styles example')
           a.btn.btn-primary(href=`/tasks/${task.id}/edit` role='button')= t('views.tasks.update')
