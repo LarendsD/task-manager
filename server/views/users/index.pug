@@ -4,7 +4,6 @@ block header
   = t('layouts.application.users')
 
 block content
-  //table.table.table-striped
   table.table.table-dark.table-striped
     thead
       tr
@@ -22,5 +21,5 @@ block content
           td= formatDate(user.createdAt)
           td
             .btn-group(role='group' aria-label='Basic mixed styles example')
-              a.btn.btn-primary(href=`/users/${user.id}/edit` role='button') Изменить
-              +buttonTo(`/users/${user.id}`, 'delete')(class="btn btn-outline-danger me-2" value='Удалить')
+              a.btn.btn-primary(href=`/users/${user.id}/edit` role='button')= t('views.users.update')
+              +buttonTo(`/users/${user.id}`, 'delete')(class="btn btn-outline-danger me-2" value =t('views.users.delete'))

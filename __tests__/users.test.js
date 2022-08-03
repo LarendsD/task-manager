@@ -11,7 +11,7 @@ describe('test users CRUD', () => {
   let app;
   let knex;
   let models;
-  const testData = getTestData();
+  let testData;
   const logIn = async (user) => {
     const responseSignIn = await app.inject({
       method: 'POST',
@@ -41,6 +41,7 @@ describe('test users CRUD', () => {
   beforeEach(async () => {
     await knex.migrate.latest();
     await prepareData(app);
+    testData = getTestData();
   });
 
   it('index', async () => {
@@ -87,7 +88,7 @@ describe('test users CRUD', () => {
     const cookie = await logIn(testData.users.existing);
     const withAuth = await app.inject({
       method: 'GET',
-      url: '/users/10/edit',
+      url: '/users/3/edit',
       cookies: cookie,
     });
     expect(withAuth.statusCode).toBe(302);
@@ -138,9 +139,7 @@ describe('test users CRUD', () => {
   });
 
   afterEach(async () => {
-    // Пока Segmentation fault: 11
-    // после каждого теста откатываем миграции
-    // await knex.migrate.rollback();
+    await knex('users').truncate();
   });
 
   afterAll(async () => {

@@ -8,5 +8,5 @@ block content
     +input(user, 'firstName', value =t('views.users.firstName'), errors)(type="text")
     +input(user, 'lastName', value =t('views.users.lastName'), errors)(type="text")
     +input(user, 'email', value =t('views.users.email'), errors)(type="text")
-    +input(user, 'password', 'Пароль', errors)(type="password")
+    +input(user, 'password', value =t('views.users.password'), errors)(type="password")
     +submit(user)(value=t('views.users.new.submit'))

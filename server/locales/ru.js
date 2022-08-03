@@ -3,6 +3,8 @@
 export default {
   translation: {
     appName: 'Fastify Шаблон',
+    appTitle: 'Hexlet manager app',
+    footer: 'Hexlet',
     flash: {
       session: {
         create: {
@@ -103,6 +105,7 @@ export default {
         lastName: 'Фамилия',
         fullName: 'Полное имя',
         email: 'Email',
+        password: 'Пароль',
         createdAt: 'Дата создания',
         actions: 'Действия',
         delete: 'Удалить',

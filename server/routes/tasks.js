@@ -11,32 +11,36 @@ export default (app) => {
         return reply;
       }
       const queries = {
-        status: [],
-        label: [],
-        executor: [],
-        isCreatorUser: '',
+        status: req.query.status ?? [],
+        label: req.query.label ?? [],
+        executor: req.query.executor ?? [],
+        isCreatorUser: req.query.isCreatorUser ? 'On' : '',
       };
       const tasks = await app.objection.models.task.query()
         .withGraphJoined('[statuses, executor, creator, labels]')
         .select('tasks.id', 'tasks.name', 'tasks.createdAt')
-        .where((task) => {
-          if (req.query.status) {
-            task.where('statuses.id', req.query.status);
-            queries.status.push(req.query.status);
-          }
-          if (req.query.executor) {
-            task.where('executor.id', req.query.executor);
-            queries.executor.push(req.query.executor);
-          }
-          if (req.query.label) {
-            task.where('labels.id', req.query.label);
-            queries.label.push(req.query.label);
-          }
-          if (req.query.isCreatorUser) {
-            task.where('creator.id', req.user.id);
-            queries.isCreatorUser = 'On';
-          }
-        });
+        .modify('filter', 'statuses.id', req.query.status)
+        .modify('filter', 'executor.id', req.query.executor)
+        .modify('filter', 'labels.id', req.query.label)
+        .modify('onlyMyTasks', req.query.isCreatorUser, req.user.id);
+      // .where((task) => {
+      //  if (req.query.status) {
+      //    task.where('statuses.id', req.query.status);
+      //    queries.status.push(req.query.status);
+      //  }
+      //  if (req.query.executor) {
+      //    task.where('executor.id', req.query.executor);
+      //    queries.executor.push(req.query.executor);
+      //  }
+      //  if (req.query.label) {
+      //    task.where('labels.id', req.query.label);
+      //    queries.label.push(req.query.label);
+      //  }
+      //  if (req.query.isCreatorUser) {
+      //    task.where('creator.id', req.user.id);
+      //    queries.isCreatorUser = 'On';
+      //  }
+      // });
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();

@@ -27,6 +27,21 @@ module.exports = class Task extends unique(BaseModel) {
     };
   }
 
+  static get modifiers() {
+    return {
+      filter(builder, column, query) {
+        if (query) {
+          builder.where(column, query);
+        }
+      },
+      onlyMyTasks(builder, isCreatorUser, id) {
+        if (isCreatorUser) {
+          builder.where('creator.id', id);
+        }
+      },
+    };
+  }
+
   static get relationMappings() {
     return {
       statuses: {
