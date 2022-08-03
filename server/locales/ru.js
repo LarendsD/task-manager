@@ -2,9 +2,9 @@
 
 export default {
   translation: {
-    appName: 'Fastify Шаблон',
+    appName: 'Менеджер задач',
     appTitle: 'Hexlet manager app',
-    footer: 'Hexlet',
+    footer: 'Hexlet, 2022',
     flash: {
       session: {
         create: {

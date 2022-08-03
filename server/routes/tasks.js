@@ -23,24 +23,6 @@ export default (app) => {
         .modify('filter', 'executor.id', req.query.executor)
         .modify('filter', 'labels.id', req.query.label)
         .modify('onlyMyTasks', req.query.isCreatorUser, req.user.id);
-      // .where((task) => {
-      //  if (req.query.status) {
-      //    task.where('statuses.id', req.query.status);
-      //    queries.status.push(req.query.status);
-      //  }
-      //  if (req.query.executor) {
-      //    task.where('executor.id', req.query.executor);
-      //    queries.executor.push(req.query.executor);
-      //  }
-      //  if (req.query.label) {
-      //    task.where('labels.id', req.query.label);
-      //    queries.label.push(req.query.label);
-      //  }
-      //  if (req.query.isCreatorUser) {
-      //    task.where('creator.id', req.user.id);
-      //    queries.isCreatorUser = 'On';
-      //  }
-      // });
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();

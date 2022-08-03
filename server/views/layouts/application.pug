@@ -48,7 +48,6 @@ main
           li.nav-item
             a.nav-link.px-2.text-white(href=route('users'))= t('layouts.application.users')
         form.col-12.col-lg-auto.mb-3.mb-lg-0.me-lg-3
-          //input.form-control.form-control-dark(type='search' placeholder='Search...' aria-label='Search')
         .text-end
         if isAuthenticated()
           a.nav-link.px-2.text-white(href=route('statuses') role='button')= t('layouts.application.statuses')
@@ -69,4 +68,4 @@ main
 
     footer
       .container.my-5.pt-4.border-top
-        a(target="_blank" href="https://ru.hexlet.io")= t('footer')
+        h5.text-white= t('footer')
