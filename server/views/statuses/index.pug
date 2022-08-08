@@ -3,7 +3,6 @@ extends ../layouts/application.pug
 block header
   = t('layouts.application.statuses')
 block content
-  //table.table.table-striped
   a.btn.btn-primary(href=`/statuses/new` role='button')= t('views.statuses.createStatus')
   table.table.table-dark.table-striped
     thead
