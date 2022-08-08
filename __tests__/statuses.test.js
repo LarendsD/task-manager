@@ -100,7 +100,7 @@ describe('test statuses CRUD', () => {
     const { name } = testData.statuses.existing;
     testData.statuses.existing.name = 'Завершен';
     const response = await app.inject({
-      method: 'POST',
+      method: 'PATCH',
       url: '/statuses/2',
       cookies: cookie,
       payload: {

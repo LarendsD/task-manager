@@ -105,7 +105,7 @@ describe('test users CRUD', () => {
     const { email } = testData.users;
     testData.users.existing.email = 'newEmail@mail.ru';
     const response = await app.inject({
-      method: 'POST',
+      method: 'PATCH',
       url: '/users/2',
       cookies: cookie,
       payload: {

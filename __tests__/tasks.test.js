@@ -146,7 +146,7 @@ describe('test tasks CRUD', () => {
     const { name } = testData.tasks.existing;
     testData.tasks.existing.name = 'Сделать еще кое-что';
     const response = await app.inject({
-      method: 'POST',
+      method: 'PATCH',
       url: '/tasks/1',
       cookies: cookie,
       payload: {

@@ -100,7 +100,7 @@ describe('test labels CRUD', () => {
     const { name } = testData.labels.existing;
     testData.labels.existing.name = 'Обычная метка';
     const response = await app.inject({
-      method: 'POST',
+      method: 'PATCH',
       url: '/labels/2',
       cookies: cookie,
       payload: {
