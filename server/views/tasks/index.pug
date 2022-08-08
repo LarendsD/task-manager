@@ -9,9 +9,9 @@ block content
     .card-body.p-4
       +formFor()(action=route('tasks') method='get')
         .row
-          +alterSelect(status, 'status', statuses, value =t('views.tasks.status'), queries.status, errors)
-          +alterSelect(executor, 'executor', users, value =t('views.tasks.executor'), queries.executor, errors)
-          +alterSelect(label, 'label', labels, value =t('views.tasks.label'), queries.label, errors)
+          +alterSelect(status, 'status', statuses, value =t('views.tasks.status'), queries.status || [], errors)
+          +alterSelect(executor, 'executor', users, value =t('views.tasks.executor'), queries.executor || [], errors)
+          +alterSelect(label, 'label', labels, value =t('views.tasks.label'), queries.label || [], errors)
         .mb-3.form-check
           if queries.isCreatorUser === 'On'
             input#data_isCreatorUser.form-check-input(type='checkbox' name='isCreatorUser' checked)
