@@ -32,11 +32,6 @@ module.exports = class Task extends unique(BaseModel) {
       filter(builder, column, query) {
         builder.where(column, query);
       },
-      onlyMyTasks(builder, isCreatorUser, id) {
-        if (isCreatorUser) {
-          builder.where('creator.id', id);
-        }
-      },
     };
   }
 

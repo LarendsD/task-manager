@@ -11,20 +11,19 @@ export default (app) => {
         return reply;
       }
       const queries = {
-        status: req.query.status,
-        label: req.query.label,
-        executor: req.query.executor,
-        isCreatorUser: req.query.isCreatorUser ? 'On' : '',
+        status: req.query.status || undefined,
+        label: req.query.label || undefined,
+        executor: req.query.executor || undefined,
+        creatorUser: req.query.isCreatorUser ? req.user.id : req.query.isCreatorUser,
       };
-      console.log(req.query);
       const tasks = await app.objection.models.task.query()
         .withGraphJoined('[statuses, executor, creator, labels]')
         .select('tasks.id', 'tasks.name', 'tasks.createdAt')
         .skipUndefined()
-        .modify('filter', 'statuses.id', req.query.status || undefined)
-        .modify('filter', 'executor.id', req.query.executor || undefined)
-        .modify('filter', 'labels.id', req.query.label || undefined)
-        .modify('onlyMyTasks', req.query.isCreatorUser, req.user.id);
+        .modify('filter', 'statuses.id', queries.status)
+        .modify('filter', 'executor.id', queries.executor)
+        .modify('filter', 'labels.id', queries.label)
+        .modify('filter', 'creator.id', queries.creatorUser);
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();

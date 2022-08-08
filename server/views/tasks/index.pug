@@ -13,7 +13,7 @@ block content
           +alterSelect(executor, 'executor', users, value =t('views.tasks.executor'), queries.executor || [], errors)
           +alterSelect(label, 'label', labels, value =t('views.tasks.label'), queries.label || [], errors)
         .mb-3.form-check
-          if queries.isCreatorUser === 'On'
+          if queries.creatorUser
             input#data_isCreatorUser.form-check-input(type='checkbox' name='isCreatorUser' checked)
           else
             input#data_isCreatorUser.form-check-input(type='checkbox' name='isCreatorUser')
