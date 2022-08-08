@@ -5,6 +5,7 @@ block header
 
 block content
   +formFor()(action=`/users/${user.id}` method='post')
+    input(type="hidden" name="_method" value="PATCH")
     +input(user, 'firstName', value =t('views.users.firstName'), errors)(type="text", value = user.firstName)
     +input(user, 'lastName', value =t('views.users.lastName'), errors)(type="text", value = user.lastName)
     +input(user, 'email', value =t('views.users.email'), errors)(type="text", value = user.email)

@@ -19,6 +19,7 @@ export default (app) => {
       const tasks = await app.objection.models.task.query()
         .withGraphJoined('[statuses, executor, creator, labels]')
         .select('tasks.id', 'tasks.name', 'tasks.createdAt')
+        .skipUndefined()
         .modify('filter', 'statuses.id', req.query.status)
         .modify('filter', 'executor.id', req.query.executor)
         .modify('filter', 'labels.id', req.query.label)
@@ -83,38 +84,28 @@ export default (app) => {
     })
 
     .post('/tasks', async (req, reply) => {
-      const { user } = req;
-      req.body.data.creatorId = user.id;
-      req.body.data.statusId = Number(req.body.data.statusId);
-      req.body.data.executorId = Number(req.body.data.executorId);
-      const {
-        name, description, statusId, executorId, creatorId, ...selectedLabels
-      } = req.body.data;
+      const creatorId = req.user.id;
+      const datas = await app.objection.models.task.fromJson({ creatorId, ...req.body.data }, {
+        skipValidation: true,
+      });
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
-      task.$set({
-        name, description, statusId, executorId, creatorId,
-      });
+      task.$set(datas);
 
       try {
-        const validTask = await app.objection.models.task.fromJson({
-          name, description, statusId, executorId, creatorId,
-        });
+        const validTask = await app.objection.models.task.fromJson(datas);
         await app.objection.models.task.transaction(async (trx) => {
-          await app.objection.models.task.query(trx).insert(validTask);
-          const createdTask = await app.objection.models.task.query(trx).where(validTask);
-          const taskId = createdTask[0].id;
-          if (selectedLabels.labels) {
-            const insert = Array.from(selectedLabels.labels).map(async (label) => {
-              const labelId = Number(label);
-              await app.objection.models.taskLabels.query(trx).insert({ taskId, labelId });
-            });
-            const result = Promise.all(insert);
-            return result;
-          }
-          return createdTask;
+          const insertLabels = await app.objection.models.label
+            .query(trx)
+            .findByIds(datas.labels || []);
+          const result = await app.objection.models.task.query(trx).insertGraph({
+            ...validTask,
+            labels:
+              insertLabels,
+          }, { relate: true });
+          return result;
         });
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
@@ -127,30 +118,28 @@ export default (app) => {
       return reply;
     })
 
-    .post('/tasks/:id', async (req, reply) => {
+    .patch('/tasks/:id', async (req, reply) => {
       const { id } = req.params;
-      req.body.data.statusId = Number(req.body.data.statusId);
-      req.body.data.executorId = Number(req.body.data.executorId);
+      const datas = await app.objection.models.task.fromJson(req.body.data, {
+        skipValidation: true,
+      });
       const {
         labels, ...patchTask
-      } = req.body.data;
-      const task = await app.objection.models.task.query().findById(req.params.id);
+      } = datas;
       try {
         await app.objection.models.task.transaction(async (trx) => {
-          await task.$query(trx).patch(patchTask);
-          const update = await app.objection.models.taskLabels.query(trx)
-            .delete()
-            .where('task_id', id);
-          if (labels) {
-            const insert = Array.from(labels).map(async (label) => {
-              const labelId = Number(label);
-              await app.objection.models.taskLabels.query(trx)
-                .insert({ taskId: Number(id), labelId });
-            });
-            const result = Promise.all(insert);
-            return result;
-          }
-          return update;
+          const task = await app.objection.models.task.query(trx).findById(id);
+          const updateLabels = await app.objection.models.label
+            .query(trx)
+            .findByIds(labels || []);
+          await app.objection.models.task.query(trx)
+            .upsertGraph({
+              ...patchTask,
+              id: task.id,
+              creatorId: task.creatorId,
+              labels:
+              updateLabels,
+            }, { relate: true, unrelate: true, noUpdate: ['labels'] });
         });
         req.flash('info', i18next.t('flash.tasks.update.success'));
         reply.redirect(app.reverse('tasks'));

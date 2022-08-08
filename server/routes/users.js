@@ -30,7 +30,7 @@ export default (app) => {
       return reply;
     })
 
-    .post('/users/:id', async (req, reply) => {
+    .patch('/users/:id', async (req, reply) => {
       const { id } = req.params;
       try {
         await req.user.$query().update(req.body.data);

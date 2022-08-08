@@ -5,6 +5,7 @@ block header
 
 block content
   +formFor()(action=`/tasks/${id}` method='post')
+    input(type="hidden" name="_method" value="PATCH")
     +input(task, 'name', value =t('views.tasks.name'), errors)(type="text", value = task.name)
     +textArea(task, 'description', value =t('views.tasks.description'), task.description, errors)(type="text")
     +select(task, 'statusId', statuses, value =t('views.tasks.status'), task.statuses.name, errors)

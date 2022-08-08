@@ -53,7 +53,7 @@ export default (app) => {
       return reply;
     })
 
-    .post('/statuses/:id', async (req, reply) => {
+    .patch('/statuses/:id', async (req, reply) => {
       const { id } = req.params;
       const status = await app.objection.models.taskStatus.query().findById(id);
       try {

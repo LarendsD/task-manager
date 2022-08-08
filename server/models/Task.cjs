@@ -30,9 +30,7 @@ module.exports = class Task extends unique(BaseModel) {
   static get modifiers() {
     return {
       filter(builder, column, query) {
-        if (query) {
-          builder.where(column, query);
-        }
+        builder.where(column, query);
       },
       onlyMyTasks(builder, isCreatorUser, id) {
         if (isCreatorUser) {
@@ -80,6 +78,17 @@ module.exports = class Task extends unique(BaseModel) {
           to: 'labels.id',
         },
       },
+    };
+  }
+
+  $parseJson(json, opt) {
+    // eslint-disable-next-line no-param-reassign
+    json = super.$parseJson(json, opt);
+    return {
+      ...json,
+      statusId: Number(json.statusId),
+      executorId: Number(json.executorId),
+      creatorId: json.creatorId,
     };
   }
 };

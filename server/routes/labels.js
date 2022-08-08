@@ -53,7 +53,7 @@ export default (app) => {
       return reply;
     })
 
-    .post('/labels/:id', async (req, reply) => {
+    .patch('/labels/:id', async (req, reply) => {
       const { id } = req.params;
       const label = await app.objection.models.label.query().findById(id);
       try {
