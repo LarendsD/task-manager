@@ -1,49 +1,49 @@
 <h1 align="center">
-  Менеджер задач
+  Task manager
 </h1>
 
 [![Actions Status](https://github.com/LarendsD/backend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/LarendsD/backend-project-lvl4/actions)
 <a href="https://codeclimate.com/github/LarendsD/backend-project-lvl4/maintainability"><img src="https://api.codeclimate.com/v1/badges/c4a9e975fd756a6b2447/maintainability" /></a>
 
-## :mag_right: Демо ##
-Попробовать <a href=https://manager-app4.herokuapp.com/> менеджер задач </a>.
-## :pencil2: Возможности ##
-Данное веб-приложение позволяет:
-- **Создавать, редактировать задачи как других пользователей, так и своих**
-- **Удалять свои задачи**
-- **Создавать, редактировать и удалять статусы, которые будут использоваться в задачах**
-- **Создавать, редактировать и удалять метки, которые будут использоваться в задачах**
-## 🛠️ Инструкция для локального развертывания ##
-1. Склонировать данный репозиторий
+## :mag_right: Demo ##
+Try <a href=https://manager-app4.herokuapp.com/> task manager </a>.
+## :pencil2: Capabilities ##
+This web application allows:
+- **Create, edit own and other users tasks**
+- **Delete own tasks**
+- **Create, edit and delete statuses, which can be used in tasks**
+- **Create, edit and delete labels, wthich can be user in tasks**
+## 🛠️ Instruction for local deployment ##
+1. Clone this repo:
 ```bash
 git clone https://github.com/LarendsD/backend-project-lvl4.git
 ```
-2. Развернуть локально
+2. Deploy locally:
 ```bash
 make setup
 ```
-3. Запустить сервер локально
+3. Run server locally:
 ```bash
 make start
 ```
-### :checkered_flag: Далее сервер будет доступен для локального использования!
+### :checkered_flag: Next, the server will be available for local use!
 
-## :large_blue_circle: Локальная разработка ##
-- **Для запуска тестов используйте**
+## :large_blue_circle: Local development ##
+- **Run tests**
 ```bash
 make test
 ```
-- **Чтобы выполнить миграции используйте**
+- **Run migrations**
 ```bash
 make db-migrate
 ```
-### :wrench: Инструменты, используемые в разработке
-- **Веб-фреймворк <a href=https://www.fastify.io>fastify</a>**
-- **Верстка страниц <a href=https://getbootstrap.com/>bootstrap</a>**
-- **Для текстов <a href=https://www.i18next.com/>i18next</a>**
-- **Миграции <a href=https://knexjs.org/>knex</a>**
+### :wrench: Tools, which used in development:
+- **Web-framework <a href=https://www.fastify.io>fastify</a>**
+- **Pages markup <a href=https://getbootstrap.com/>bootstrap</a>**
+- **Text <a href=https://www.i18next.com/>i18next</a>**
+- **Migrations <a href=https://knexjs.org/>knex</a>**
 - **ORM <a href=https://vincit.github.io/objection.js/>objection.js</a>**
-- **Шаблонизатор <a href=https://pugjs.org/>pug</a>**
-- **Обработчик ошибок <a href=https://rollbar.com/>rollbar</a>**
-- **SQL БД(локально) <a href=https://www.sqlite.org/index.html>sqlite</a>**
-- **SQL БД(на демо) <a href=https://www.postgresql.org/>postgreSQL</a>**
+- **Template engine <a href=https://pugjs.org/>pug</a>**
+- **Error logging <a href=https://rollbar.com/>rollbar</a>**
+- **SQL DB(locally) <a href=https://www.sqlite.org/index.html>sqlite</a>**
+- **SQL DB(on demo) <a href=https://www.postgresql.org/>postgreSQL</a>**
