@@ -31,6 +31,7 @@ export const production = {
   connection: {
     connectionString: process.env.DATABASE_URL,
     user: 'postgres',
+    password: 'postgres',
     ssl: { rejectUnauthorized: false },
     filename: './database.sqlite',
   },
