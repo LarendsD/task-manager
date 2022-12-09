@@ -37,6 +37,12 @@ make test
 ```bash
 make db-migrate
 ```
+
+- **Drop migrations**
+```bash
+make db-drop
+```
+
 ### :wrench: Tools, which used in development:
 - **Web-framework <a href=https://www.fastify.io>fastify</a>**
 - **Pages markup <a href=https://getbootstrap.com/>bootstrap</a>**

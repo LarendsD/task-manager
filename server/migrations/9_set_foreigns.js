@@ -1,5 +1,5 @@
-export const up = (knex) => {
-  knex.schema.table('task_labels', (table) => {
+export const up = (knex) => knex.schema
+  .table('task_labels', (table) => {
     table.foreign('task_id')
       .references('id')
       .inTable('tasks');
@@ -7,9 +7,7 @@ export const up = (knex) => {
       .references('id')
       .inTable('labels');
   })
-  .then(() => console.log('tasks_labels done'));
-
-  knex.schema.table('tasks', (table) => {
+  .table('tasks', (table) => {
     table.foreign('status_id')
       .references('id')
       .inTable('task_statuses');
@@ -19,8 +17,6 @@ export const up = (knex) => {
     table.foreign('executor_id')
       .references('id')
       .inTable('users');
-  })
-  .then(() => console.log('tasks done'))
-}
+  }).then(() => console.log('Migration complete!'))
 
-export const down = (knex) => console.log('drop tasks done!');
+export const down = (knex) => knex.schema.then(() => console.log('Dropping migrations...'));
