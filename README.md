@@ -5,6 +5,9 @@
 [![Actions Status](https://github.com/LarendsD/backend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/LarendsD/backend-project-lvl4/actions)
 <a href="https://codeclimate.com/github/LarendsD/backend-project-lvl4/maintainability"><img src="https://api.codeclimate.com/v1/badges/c4a9e975fd756a6b2447/maintainability" /></a>
 
+## :mag_right: Demo ##
+Try <a href=https://task-manager.up.railway.app/> task manager </a>.
+
 ## :pencil2: Capabilities ##
 This web application allows:
 - **Create, edit own and other users tasks**
